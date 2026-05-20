@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --blue:       #1E3A5F;
+  --blue-dark:  #162C4A;
+  --gold:       #D4A373;
+  --gold-dark:  #B8855A;
+  --champagne:  #F5EFE6;
+  --graphite:   #2D2D2D;
+  --snow:       #FAFAFA;
+  --muted:      #6B7280;
+  --border:     #E8E0D5;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--snow);
+  color: var(--graphite);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  /* Botão principal — dourado */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg
+    transition-colors duration-200 text-sm text-white;
+    background-color: var(--gold);
+  }
+  .btn-primary:hover { background-color: var(--blue); }
+
+  /* Botão secundário — azul */
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg
+    transition-colors duration-200 text-sm text-white;
+    background-color: var(--blue);
+  }
+  .btn-secondary:hover { background-color: var(--blue-dark); }
+
+  /* Botão outline */
+  .btn-outline {
+    @apply inline-flex items-center gap-2 border font-medium px-5 py-2.5
+    rounded-lg transition-colors duration-200 text-sm;
+    border-color: var(--border);
+    color: var(--graphite);
+  }
+  .btn-outline:hover { background-color: var(--champagne); }
+
+  /* Card padrão */
+  .card {
+    @apply bg-white rounded-2xl overflow-hidden border transition-shadow duration-300;
+    border-color: var(--border);
+  }
+  .card:hover { @apply shadow-lg; }
+
+  /* Badges */
+  .badge       { @apply inline-block text-xs font-semibold px-2.5 py-1 rounded-full; }
+  .badge-gold  { @apply badge; background-color: #FDF0E0; color: #8C5E2A; }
+  .badge-blue  { @apply badge; background-color: #E6EDF5; color: var(--blue); }
+
+  /* Título de seção */
+  .section-title {
+    @apply font-serif text-2xl md:text-3xl font-bold;
+    color: var(--blue);
+  }
+
+  /* Tag "Oferta" */
+  .tag-oferta {
+    @apply badge text-white text-[10px] uppercase tracking-wider;
+    background-color: var(--gold);
+  }
+}
