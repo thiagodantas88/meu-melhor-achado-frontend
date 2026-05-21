@@ -27,20 +27,20 @@ export default function ArtigoPage({ params }: Props) {
   if (!article) notFound()
 
   return (
-    <article className="max-w-3xl mx-auto px-4 py-12">
+    <article className="mx-auto max-w-3xl px-4 py-10 sm:py-12">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-xs mb-8" style={{ color: '#6B7280' }}>
+      <nav className="mb-7 flex max-w-full items-center gap-2 overflow-hidden text-xs" style={{ color: '#6B7280' }}>
         <Link href="/" className="hover:underline">Home</Link>
         <span>/</span>
         <Link href={`/categoria/${article.category.slug}`} className="hover:underline">
           {article.category.name}
         </Link>
         <span>/</span>
-        <span className="truncate max-w-[200px]">{article.title}</span>
+        <span className="min-w-0 truncate">{article.title}</span>
       </nav>
 
       {/* Category + meta */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className="mb-4 flex flex-wrap items-center gap-2 sm:gap-3">
         <span className="badge-gold">{article.category.icon} {article.category.name}</span>
         <span className="text-xs" style={{ color: '#6B7280' }}>
           {formatDate(article.publishedAt)} · {article.readingTime} min de leitura
@@ -48,24 +48,24 @@ export default function ArtigoPage({ params }: Props) {
       </div>
 
       {/* Title */}
-      <h1 className="font-serif text-3xl md:text-4xl font-bold leading-tight mb-4" style={{ color: '#1E3A5F' }}>
+      <h1 className="mb-4 font-serif text-3xl font-bold leading-tight sm:text-4xl" style={{ color: '#1E3A5F' }}>
         {article.title}
       </h1>
 
       {/* Summary */}
-      <p className="text-lg leading-relaxed mb-8" style={{ color: '#6B7280' }}>
+      <p className="mb-8 text-base leading-relaxed sm:text-lg" style={{ color: '#6B7280' }}>
         {article.summary}
       </p>
 
       {/* Hero image */}
       {article.imageUrl && (
-        <div className="relative w-full h-64 md:h-80 rounded-2xl overflow-hidden mb-10">
+        <div className="relative mb-10 h-56 w-full overflow-hidden rounded-lg sm:h-64 md:h-80">
           <Image src={article.imageUrl} alt={article.title} fill className="object-cover" priority />
         </div>
       )}
 
       {/* Affiliate notice */}
-      <div className="rounded-xl p-4 mb-10 text-sm flex gap-3 items-start" style={{ backgroundColor: '#F5EFE6', borderLeft: '3px solid #D4A373' }}>
+      <div className="mb-10 flex items-start gap-3 rounded-lg p-4 text-sm" style={{ backgroundColor: '#F5EFE6', borderLeft: '3px solid #D4A373' }}>
         <span className="text-lg">🔍</span>
         <p style={{ color: '#6B7280' }}>
           <strong style={{ color: '#2D2D2D' }}>Transparência:</strong> Alguns links neste artigo são de afiliados.
@@ -91,7 +91,7 @@ export default function ArtigoPage({ params }: Props) {
           <h2 className="font-serif text-2xl font-bold mb-6" style={{ color: '#1E3A5F' }}>
             Nossas indicações
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
             {article.products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -101,7 +101,7 @@ export default function ArtigoPage({ params }: Props) {
 
       {/* Back */}
       <div className="mt-14 pt-8 border-t" style={{ borderColor: '#E8E0D5' }}>
-        <Link href={`/categoria/${article.category.slug}`} className="btn-outline">
+        <Link href={`/categoria/${article.category.slug}`} className="btn-outline w-full sm:w-auto">
           ← Ver mais em {article.category.name}
         </Link>
       </div>

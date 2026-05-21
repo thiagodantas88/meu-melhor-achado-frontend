@@ -9,8 +9,8 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <header style={{ backgroundColor: '#1E3A5F' }} className="sticky top-0 z-50 shadow-md">
-      <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <header style={{ backgroundColor: '#FAFAFA' }} className="sticky top-0 z-50 border-b border-brand-border shadow-sm">
+      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4">
 
         <Link href="/" aria-label="Ir para a home">
           <Logo />
@@ -22,14 +22,14 @@ export default function Navbar() {
             <Link
               key={cat.slug}
               href={`/categoria/${cat.slug}`}
-              className="text-sm text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition-colors"
+              className="text-sm text-brand-blue hover:text-brand-gold hover:bg-brand-champagne px-3 py-2 rounded-lg transition-colors"
             >
               {cat.icon} {cat.name}
             </Link>
           ))}
           <Link
             href="/sobre"
-            className="text-sm text-white/60 hover:text-white px-3 py-2 rounded-lg transition-colors"
+            className="text-sm text-brand-muted hover:text-brand-blue hover:bg-brand-champagne px-3 py-2 rounded-lg transition-colors"
           >
             Sobre
           </Link>
@@ -38,7 +38,7 @@ export default function Navbar() {
         {/* Mobile toggle */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-white p-2"
+          className="md:hidden min-h-11 min-w-11 rounded-lg p-2 text-brand-blue hover:bg-brand-champagne"
           aria-label="Abrir menu"
         >
           {menuOpen ? (
@@ -55,14 +55,14 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div style={{ backgroundColor: '#162C4A' }} className="md:hidden border-t border-white/10">
-          <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1">
+        <div style={{ backgroundColor: '#FAFAFA' }} className="md:hidden border-t border-brand-border">
+          <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3">
             {CATEGORIES.map((cat) => (
               <Link
                 key={cat.slug}
                 href={`/categoria/${cat.slug}`}
                 onClick={() => setMenuOpen(false)}
-                className="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2.5 rounded-lg transition-colors text-sm"
+                className="rounded-lg px-3 py-3 text-sm text-brand-blue transition-colors hover:bg-brand-champagne hover:text-brand-gold"
               >
                 {cat.icon} {cat.name}
               </Link>
@@ -70,7 +70,7 @@ export default function Navbar() {
             <Link
               href="/sobre"
               onClick={() => setMenuOpen(false)}
-              className="text-white/70 hover:text-white px-3 py-2.5 text-sm"
+              className="rounded-lg px-3 py-3 text-sm text-brand-muted hover:bg-brand-champagne hover:text-brand-blue"
             >
               Sobre
             </Link>

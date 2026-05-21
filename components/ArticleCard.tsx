@@ -11,7 +11,7 @@ function formatDate(dateStr: string) {
 export default function ArticleCard({ article }: { article: Article }) {
   return (
     <Link href={`/artigo/${article.slug}`} className="card group block">
-      <div className="relative w-full h-48 overflow-hidden" style={{ backgroundColor: '#F5EFE6' }}>
+      <div className="relative h-44 w-full overflow-hidden sm:h-48" style={{ backgroundColor: '#F5EFE6' }}>
         {article.imageUrl ? (
           <Image
             src={article.imageUrl}
@@ -31,7 +31,7 @@ export default function ArticleCard({ article }: { article: Article }) {
         </div>
       </div>
 
-      <div className="p-5">
+      <div className="p-4 sm:p-5">
         <h3
           className="font-serif text-lg font-bold leading-snug line-clamp-2 transition-colors group-hover:opacity-80"
           style={{ color: '#1E3A5F' }}
@@ -41,7 +41,7 @@ export default function ArticleCard({ article }: { article: Article }) {
         <p className="mt-2 text-sm leading-relaxed line-clamp-2" style={{ color: '#6B7280' }}>
           {article.summary}
         </p>
-        <div className="mt-4 flex items-center justify-between text-xs" style={{ color: '#6B7280' }}>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs" style={{ color: '#6B7280' }}>
           <span>{formatDate(article.publishedAt)}</span>
           <span>{article.readingTime} min de leitura</span>
         </div>

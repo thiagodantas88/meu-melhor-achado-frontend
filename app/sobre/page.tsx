@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 
 export default function SobrePage() {
   return (
-    <div className="max-w-2xl mx-auto px-4 py-16">
-      <h1 className="font-serif text-4xl font-bold mb-4" style={{ color: '#1E3A5F' }}>
+    <div className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
+      <h1 className="mb-4 font-serif text-3xl font-bold leading-tight sm:text-4xl" style={{ color: '#1E3A5F' }}>
         O que é o Meu Melhor Achado?
       </h1>
       <div className="h-1 w-14 rounded-full mb-8" style={{ backgroundColor: '#D4A373' }} />
@@ -29,7 +29,7 @@ export default function SobrePage() {
           indicações honestas.
         </p>
 
-        <div className="rounded-2xl p-6 my-8" style={{ backgroundColor: '#F5EFE6', border: '1px solid #E8E0D5' }}>
+        <div className="my-8 rounded-lg p-5 sm:p-6" style={{ backgroundColor: '#F5EFE6', border: '1px solid #E8E0D5' }}>
           <h2 className="font-serif text-xl font-bold mb-3" style={{ color: '#1E3A5F' }}>
             Sobre os links de afiliados
           </h2>

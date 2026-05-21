@@ -16,34 +16,44 @@
 
 html { scroll-behavior: smooth; }
 
+* { box-sizing: border-box; }
+
 body {
   background-color: var(--snow);
   color: var(--graphite);
   font-family: var(--font-dm-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
 }
 
 @layer components {
   /* Botão principal — dourado */
   .btn-primary {
-    @apply inline-flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg
-    transition-colors duration-200 text-sm text-white;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-5 py-2.5
+    text-center text-sm font-semibold text-white transition-colors duration-200;
     background-color: var(--gold);
   }
   .btn-primary:hover { background-color: var(--blue); }
 
   /* Botão secundário — azul */
   .btn-secondary {
-    @apply inline-flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg
-    transition-colors duration-200 text-sm text-white;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-5 py-2.5
+    text-center text-sm font-semibold text-white transition-colors duration-200;
     background-color: var(--blue);
   }
   .btn-secondary:hover { background-color: var(--blue-dark); }
 
   /* Botão outline */
   .btn-outline {
-    @apply inline-flex items-center gap-2 border font-medium px-5 py-2.5
-    rounded-lg transition-colors duration-200 text-sm;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border px-5 py-2.5
+    text-center text-sm font-medium transition-colors duration-200;
     border-color: var(--border);
     color: var(--graphite);
   }
@@ -51,7 +61,7 @@ body {
 
   /* Card padrão */
   .card {
-    @apply bg-white rounded-2xl overflow-hidden border transition-shadow duration-300;
+    @apply overflow-hidden rounded-lg border bg-white transition-shadow duration-300;
     border-color: var(--border);
   }
   .card:hover { @apply shadow-lg; }
