@@ -15,7 +15,15 @@ export type Product = {
   affiliateUrl: string
   imageUrl?: string
   price?: string
+  rating?: number
   badge?: string
+}
+
+export type ContentSection = {
+  type: 'intro' | 'text' | 'criteria'
+  text?: string
+  title?: string
+  items?: string[]
 }
 
 export type Article = {
@@ -26,6 +34,6 @@ export type Article = {
   publishedAt: string
   readingTime: number
   imageUrl?: string
-  content?: string
+  contentSections?: ContentSection[]
   products?: Product[]
 }
