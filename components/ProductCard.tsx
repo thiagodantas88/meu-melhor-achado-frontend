@@ -46,10 +46,6 @@ export default function ProductCard({ product }: { product: Product }) {
       >
         Ver oferta →
       </a>
-
-      <p className="text-xs text-center" style={{ color: '#6B7280' }}>
-        Link de afiliado — sem custo extra para você
-      </p>
     </div>
   )
 }
