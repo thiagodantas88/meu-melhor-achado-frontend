@@ -200,7 +200,7 @@ export const ARTICLES: Article[] = [
           'App disponível apenas para Android',
           'Pode incomodar em uso prolongado',
         ],
-        affiliateUrl: 'https://www.magazinevoce.com.br/magazinemeumelhorachado/busca/Xiaomi+Redmi+Buds+5+Pro/',
+        affiliateUrl: 'https://www.amazon.com.br/s?k=Xiaomi+Redmi+Buds+5+Pro&tag=meumelhoracha-20',
         price: 'R$ 279',
         badge: 'Melhor In-ear',
       },
