@@ -3,6 +3,7 @@ import { Lora, DM_Sans } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import GoogleAnalytics from '@/components/GoogleAnalytics'
 
 const lora = Lora({
   subsets: ['latin'],
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR" className={`${lora.variable} ${dmSans.variable}`}>
       <body className="min-h-screen flex flex-col" style={{ backgroundColor: '#FAFAFA' }}>
+        <GoogleAnalytics />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
