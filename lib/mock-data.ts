@@ -29,6 +29,20 @@ export const CATEGORIES: Category[] = [
     icon: '🖥️',
     color: '#D4A373',
   },
+  {
+    slug: 'bebidas',
+    name: 'Bebidas',
+    description: 'Seleções de bebidas de melhor qualidade para apreciar, presentear e escolher bem.',
+    icon: '🍷',
+    color: '#1E3A5F',
+  },
+  {
+    slug: 'moda',
+    name: 'Moda',
+    description: 'Moda feminina com achados elegantes, versáteis e bom custo-benefício.',
+    icon: '👗',
+    color: '#D4A373',
+  },
 ]
 
 export const ARTICLES: Article[] = [
