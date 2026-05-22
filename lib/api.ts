@@ -29,10 +29,10 @@ export const api = {
     apiFetch<Article[]>(`/articles/?category=${slug}&limit=${limit}`),
   recentArticles: (limit = 5) => apiFetch<Article[]>(`/articles/recent?limit=${limit}`),
   article: (slug: string) => apiFetch<Article>(`/articles/${slug}`),
-  todayComparisons: () => apiFetch<Comparison[]>('/comparisons/today', 1800),
+  todayComparisons: () => apiFetch<Comparison[]>('/comparisons/today', 300),
   deals: (category?: string, limit = 20) => {
     const params = new URLSearchParams({ limit: String(limit) })
     if (category) params.set('category', category)
-    return apiFetch<Deal[]>(`/deals/?${params.toString()}`, 1800)
+    return apiFetch<Deal[]>(`/deals/?${params.toString()}`, 60)
   },
 }

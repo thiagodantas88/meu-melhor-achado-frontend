@@ -13,6 +13,8 @@ export const metadata = {
   description: 'Ofertas encontradas automaticamente pelo robô do Meu Melhor Achado.',
 }
 
+export const revalidate = 60
+
 export default async function OfertasPage({ searchParams }: Props) {
   const selectedCategory = searchParams?.categoria
   const [categories, deals] = await Promise.all([
