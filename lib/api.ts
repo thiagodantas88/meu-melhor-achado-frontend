@@ -5,7 +5,8 @@ const API_URL =
   'https://meu-melhor-achado-backend-production.up.railway.app'
 
 async function apiFetch<T>(path: string, revalidate = 3600): Promise<T> {
-  const response = await fetch(`${API_URL}${path}`, { next: { revalidate } })
+  const fetchOptions = revalidate <= 0 ? { cache: 'no-store' as const } : { next: { revalidate } }
+  const response = await fetch(`${API_URL}${path}`, fetchOptions)
   if (!response.ok) {
     throw new Error(`API error: ${path} -> ${response.status}`)
   }
@@ -33,6 +34,6 @@ export const api = {
   deals: (category?: string, limit = 20) => {
     const params = new URLSearchParams({ limit: String(limit) })
     if (category) params.set('category', category)
-    return apiFetch<Deal[]>(`/deals/?${params.toString()}`, 60)
+    return apiFetch<Deal[]>(`/deals/?${params.toString()}`, 0)
   },
 }

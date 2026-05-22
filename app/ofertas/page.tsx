@@ -13,7 +13,8 @@ export const metadata = {
   description: 'Seleção atualizada de oportunidades em lojas parceiras.',
 }
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 export default async function OfertasPage({ searchParams }: Props) {
   const selectedCategory = searchParams?.categoria
