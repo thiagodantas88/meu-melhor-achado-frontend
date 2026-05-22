@@ -86,7 +86,7 @@ export default async function HomePage() {
           <div>
             <h2 className="section-title">Comparativos do dia</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#6B7280]">
-              O robô atualiza esta área todos os dias às 06:00 com oportunidades encontradas nas lojas parceiras.
+              Seleções recentes para comparar produtos parecidos e escolher com mais segurança.
             </p>
           </div>
           <Link href="/ofertas" className="btn-outline w-full sm:w-auto">
@@ -107,7 +107,7 @@ export default async function HomePage() {
               Comparativos em preparação
             </h3>
             <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#6B7280]">
-              Assim que o robô encontrar ofertas suficientes, os comparativos aparecem aqui automaticamente.
+              Novos comparativos aparecem aqui conforme as seleções forem atualizadas.
             </p>
           </div>
         )}

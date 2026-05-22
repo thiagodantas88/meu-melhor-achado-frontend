@@ -10,7 +10,7 @@ type Props = {
 
 export const metadata = {
   title: 'Ofertas do dia',
-  description: 'Ofertas encontradas automaticamente pelo robô do Meu Melhor Achado.',
+  description: 'Seleção atualizada de oportunidades em lojas parceiras.',
 }
 
 export const revalidate = 60
@@ -31,7 +31,7 @@ export default async function OfertasPage({ searchParams }: Props) {
             Ofertas do dia
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#6B7280]">
-            O robô busca oportunidades na Amazon e no Magalu e atualiza esta página todos os dias às 06:00.
+            Seleção atualizada de oportunidades em lojas parceiras, com links diretos para conferir os detalhes.
           </p>
         </div>
         <Link href="/" className="btn-outline w-full md:w-auto">
@@ -83,7 +83,7 @@ export default async function OfertasPage({ searchParams }: Props) {
             Ofertas em atualização
           </h2>
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[#6B7280]">
-            O robô atualiza às 06:00. Quando encontrar ofertas válidas, elas aparecem aqui automaticamente.
+            Novas oportunidades aparecerão aqui assim que estiverem disponíveis.
           </p>
         </div>
       )}

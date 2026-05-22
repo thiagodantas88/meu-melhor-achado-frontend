@@ -39,7 +39,12 @@ export default function DealCard({ deal }: { deal: Deal }) {
         {deal.imageUrl ? (
           <img src={deal.imageUrl} alt={deal.productName} className="h-full w-full object-contain p-4" />
         ) : (
-          <span className="text-5xl">{CATEGORY_ICON[deal.category] || '🛒'}</span>
+          <div className="flex flex-col items-center gap-2 text-center">
+            <span className="text-3xl">{CATEGORY_ICON[deal.category] || '🛒'}</span>
+            <span className="px-4 text-xs font-semibold uppercase tracking-wide text-[#6B7280]">
+              Imagem indisponível
+            </span>
+          </div>
         )}
         {!!deal.discountPct && deal.discountPct > 0 && (
           <span
