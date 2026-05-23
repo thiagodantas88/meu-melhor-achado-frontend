@@ -35,17 +35,17 @@ export default function DealCard({ deal }: { deal: Deal }) {
       className="group flex min-h-full flex-col overflow-hidden rounded-lg border bg-white transition-shadow hover:shadow-lg"
       style={{ borderColor: '#E8E0D5' }}
     >
-      <div className="relative flex h-40 w-full items-center justify-center" style={{ backgroundColor: '#F5EFE6' }}>
-        {deal.imageUrl ? (
-          <img src={deal.imageUrl} alt={deal.productName} className="h-full w-full object-contain p-4" />
-        ) : (
-          <div className="flex flex-col items-center gap-2 text-center">
-            <span className="text-3xl">{CATEGORY_ICON[deal.category] || '🛒'}</span>
-            <span className="px-4 text-xs font-semibold uppercase tracking-wide text-[#6B7280]">
-              Imagem indisponível
-            </span>
-          </div>
-        )}
+      <div
+        className="relative flex h-40 w-full flex-col items-center justify-center gap-2"
+        style={{ backgroundColor: '#F5EFE6' }}
+      >
+        <span className="text-4xl">{CATEGORY_ICON[deal.category] || '🛒'}</span>
+        <span
+          className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+          style={{ backgroundColor: '#E8E0D5', color: '#6B7280' }}
+        >
+          {SOURCE_LABEL[deal.source] || deal.source}
+        </span>
         {!!deal.discountPct && deal.discountPct > 0 && (
           <span
             className="absolute right-3 top-3 rounded-full px-2 py-1 text-xs font-bold text-white"
@@ -75,10 +75,7 @@ export default function DealCard({ deal }: { deal: Deal }) {
             Economia de {savings}
           </p>
         )}
-        <div className="mt-auto flex items-center justify-between gap-3 border-t pt-3" style={{ borderColor: '#E8E0D5' }}>
-          <span className="text-xs" style={{ color: '#6B7280' }}>
-            {SOURCE_LABEL[deal.source] || deal.source}
-          </span>
+        <div className="mt-auto flex items-center justify-end gap-3 border-t pt-3" style={{ borderColor: '#E8E0D5' }}>
           <span className="rounded-lg px-3 py-1.5 text-xs font-semibold text-white" style={{ backgroundColor: '#D4A373' }}>
             Ver oferta →
           </span>
