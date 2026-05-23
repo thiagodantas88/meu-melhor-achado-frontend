@@ -8,6 +8,8 @@ import type { Metadata } from 'next'
 
 type Props = { params: { slug: string } }
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://meumelhorachado.com.br'
+
 async function getArticle(slug: string): Promise<Article | null> {
   try {
     return await api.article(slug)
@@ -19,7 +21,31 @@ async function getArticle(slug: string): Promise<Article | null> {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await getArticle(params.slug)
   if (!article) return {}
-  return { title: article.title, description: article.summary }
+
+  const url = `${SITE_URL}/artigo/${article.slug}`
+  const images = article.imageUrl ? [{ url: article.imageUrl, alt: article.title }] : undefined
+
+  return {
+    title: article.title,
+    description: article.summary,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: article.title,
+      description: article.summary,
+      url,
+      type: 'article',
+      publishedTime: article.publishedAt,
+      images,
+    },
+    twitter: {
+      card: article.imageUrl ? 'summary_large_image' : 'summary',
+      title: article.title,
+      description: article.summary,
+      images: article.imageUrl ? [article.imageUrl] : undefined,
+    },
+  }
 }
 
 function formatDate(dateStr: string) {
@@ -36,8 +62,38 @@ export default async function ArtigoPage({ params }: Props) {
   const article = await getArticle(params.slug)
   if (!article) notFound()
 
+  const articleUrl = `${SITE_URL}/artigo/${article.slug}`
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.summary,
+    image: article.imageUrl ? [article.imageUrl] : undefined,
+    datePublished: article.publishedAt,
+    dateModified: article.publishedAt,
+    author: {
+      '@type': 'Organization',
+      name: 'Meu Melhor Achado',
+      url: SITE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Meu Melhor Achado',
+      url: SITE_URL,
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': articleUrl,
+    },
+  }
+
   return (
     <article className="mx-auto max-w-3xl px-4 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <nav className="mb-8 flex items-center gap-2 text-xs" style={{ color: '#6B7280' }}>
         <Link href="/" className="hover:underline">Home</Link>
         <span>/</span>
