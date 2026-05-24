@@ -20,12 +20,16 @@ function formatMoney(value?: number | null) {
 }
 
 export default function DealCard({ deal }: { deal: Deal }) {
-  const originalPrice = formatMoney(deal.originalPrice)
   const dealPrice = formatMoney(deal.dealPrice)
-  const savings =
-    typeof deal.originalPrice === 'number' && deal.originalPrice > deal.dealPrice
-      ? formatMoney(deal.originalPrice - deal.dealPrice)
-      : null
+  const hasDiscount =
+    typeof deal.originalPrice === 'number' &&
+    deal.originalPrice > deal.dealPrice &&
+    typeof deal.discountPct === 'number' &&
+    deal.discountPct > 0
+  const originalPrice = hasDiscount ? formatMoney(deal.originalPrice) : null
+  const savings = hasDiscount ? formatMoney(deal.originalPrice! - deal.dealPrice) : null
+  const affiliateUrl = deal.affiliateUrl ?? ''
+  const hasValidUrl = affiliateUrl.startsWith('https://')
   const cardClass =
     'group flex min-h-full flex-col overflow-hidden rounded-lg border bg-white transition-shadow hover:shadow-lg'
   const cardStyle = { borderColor: '#E8E0D5' }
@@ -43,45 +47,67 @@ export default function DealCard({ deal }: { deal: Deal }) {
         >
           {SOURCE_LABEL[deal.source] || deal.source}
         </span>
-        {!!deal.discountPct && deal.discountPct > 0 && (
-          <span
-            className="absolute right-3 top-3 rounded-full px-2 py-1 text-xs font-bold text-white"
-            style={{ backgroundColor: '#D4A373' }}
+        {hasDiscount && (
+          <div
+            className="absolute right-0 top-0 flex flex-col items-center rounded-bl-lg px-3 py-1.5 text-white"
+            style={{ backgroundColor: '#1E3A5F' }}
           >
-            -{deal.discountPct}%
-          </span>
+            <span className="text-lg font-black leading-none">-{deal.discountPct}%</span>
+            <span className="text-[9px] font-semibold uppercase text-white/75">off</span>
+          </div>
         )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-2 p-4">
+      <div className="flex flex-1 flex-col gap-3 p-4">
         <p className="line-clamp-2 text-sm font-semibold leading-snug" style={{ color: '#2D2D2D' }}>
           {deal.productName}
         </p>
-        <div className="flex flex-wrap items-end gap-2">
-          <span className="text-lg font-bold" style={{ color: '#1E3A5F' }}>
+
+        {hasDiscount ? (
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-semibold" style={{ color: '#6B7280' }}>
+                DE
+              </span>
+              <span className="text-sm line-through" style={{ color: '#9CA3AF' }}>
+                {originalPrice}
+              </span>
+              <span className="text-xs font-semibold" style={{ color: '#6B7280' }}>
+                POR
+              </span>
+              <span className="text-lg font-black" style={{ color: '#1E3A5F' }}>
+                {dealPrice || 'Oferta disponível'}
+              </span>
+            </div>
+
+            {savings && (
+              <div
+                className="flex w-fit items-center gap-1.5 rounded-lg px-2.5 py-1.5"
+                style={{ backgroundColor: '#FEF3C7' }}
+              >
+                <span className="text-sm">💰</span>
+                <span className="text-xs font-bold" style={{ color: '#92400E' }}>
+                  Economize {savings} ({deal.discountPct}% off)
+                </span>
+              </div>
+            )}
+          </div>
+        ) : (
+          <span className="text-lg font-black" style={{ color: '#1E3A5F' }}>
             {dealPrice || 'Oferta disponível'}
           </span>
-          {originalPrice && deal.originalPrice && deal.originalPrice > deal.dealPrice && (
-            <span className="text-xs line-through" style={{ color: '#6B7280' }}>
-              {originalPrice}
-            </span>
-          )}
-        </div>
-        {savings && (
-          <p className="text-xs" style={{ color: '#B8855A' }}>
-            Economia de {savings}
-          </p>
         )}
+
         <div className="mt-auto flex items-center justify-end gap-3 border-t pt-3" style={{ borderColor: '#E8E0D5' }}>
-          <span className="rounded-lg px-3 py-1.5 text-xs font-semibold text-white" style={{ backgroundColor: '#D4A373' }}>
-            {deal.affiliateUrl ? 'Ver oferta →' : 'Oferta em validação'}
+          <span className="w-full rounded-lg px-3 py-2.5 text-center text-xs font-bold text-white" style={{ backgroundColor: '#D4A373' }}>
+            {hasValidUrl ? 'Ver oferta →' : 'Oferta em validação'}
           </span>
         </div>
       </div>
     </>
   )
 
-  if (!deal.affiliateUrl) {
+  if (!hasValidUrl) {
     return (
       <div className={cardClass} style={cardStyle}>
         {content}
@@ -91,7 +117,7 @@ export default function DealCard({ deal }: { deal: Deal }) {
 
   return (
     <a
-      href={deal.affiliateUrl}
+      href={affiliateUrl}
       target="_blank"
       rel="noopener noreferrer nofollow"
       className={cardClass}
