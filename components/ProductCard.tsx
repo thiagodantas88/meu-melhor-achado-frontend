@@ -1,6 +1,9 @@
 import { Product } from '@/types'
 
 export default function ProductCard({ product }: { product: Product }) {
+  const affiliateUrl = product.affiliateUrl ?? ''
+  const hasValidUrl = affiliateUrl.startsWith('https://')
+
   return (
     <div className="flex flex-col gap-4 rounded-lg border bg-white p-4 sm:p-6" style={{ borderColor: '#E8E0D5' }}>
       <div>
@@ -38,18 +41,18 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
       </div>
 
-      {product.affiliateUrl ? (
+      {hasValidUrl ? (
         <a
-          href={product.affiliateUrl}
+          href={affiliateUrl}
           target="_blank"
           rel="noopener noreferrer nofollow"
-          className="btn-primary mt-auto justify-center text-center"
+          className="btn-primary mt-auto w-full justify-center text-center"
         >
           Ver oferta →
         </a>
       ) : (
-        <span className="mt-auto rounded-lg bg-[#E8E0D5] px-4 py-3 text-center text-sm font-semibold text-[#6B7280]">
-          Oferta em validação
+        <span className="mt-auto text-center text-xs" style={{ color: '#6B7280' }}>
+          Oferta em breve
         </span>
       )}
     </div>
