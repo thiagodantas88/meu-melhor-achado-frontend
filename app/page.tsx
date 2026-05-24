@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import ArticleCard from '@/components/ArticleCard'
 import ComparisonCard from '@/components/ComparisonCard'
+import EmailCapture from '@/components/EmailCapture'
 import { api, safeApiFetch } from '@/lib/api'
 
 export default async function HomePage() {
@@ -128,6 +129,10 @@ export default async function HomePage() {
             <p className="text-sm text-[#6B7280]">Novos artigos aparecem aqui assim que forem publicados.</p>
           </div>
         )}
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-12 sm:pb-16">
+        <EmailCapture />
       </section>
 
       <section style={{ backgroundColor: '#F5EFE6' }} className="border-t border-[#E8E0D5]">

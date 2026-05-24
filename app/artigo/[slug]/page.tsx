@@ -2,6 +2,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import ProductCard from '@/components/ProductCard'
+import RelatedArticles from '@/components/RelatedArticles'
+import ShareWhatsApp from '@/components/ShareWhatsApp'
 import { api } from '@/lib/api'
 import type { Article } from '@/types'
 import type { Metadata } from 'next'
@@ -62,6 +64,10 @@ export default async function ArtigoPage({ params }: Props) {
   const article = await getArticle(params.slug)
   if (!article) notFound()
 
+  const related = await api.articlesByCategory(article.category.slug, 5)
+    .then((list) => list.filter((item) => item.slug !== article.slug).slice(0, 4))
+    .catch(() => [])
+
   const articleUrl = `${SITE_URL}/artigo/${article.slug}`
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -114,6 +120,10 @@ export default async function ArtigoPage({ params }: Props) {
       </h1>
 
       <p className="mb-8 text-lg leading-relaxed" style={{ color: '#6B7280' }}>{article.summary}</p>
+
+      <div className="mb-8 flex flex-wrap items-center gap-3">
+        <ShareWhatsApp title={article.title} url={articleUrl} />
+      </div>
 
       {article.imageUrl && (
         <div className="relative mb-10 h-64 w-full overflow-hidden rounded-lg md:h-80">
@@ -184,6 +194,8 @@ export default async function ArtigoPage({ params }: Props) {
           </div>
         </section>
       )}
+
+      <RelatedArticles articles={related} />
 
       <div className="mt-14 border-t pt-8" style={{ borderColor: '#E8E0D5' }}>
         <Link href={`/categoria/${article.category.slug}`} className="btn-outline">
