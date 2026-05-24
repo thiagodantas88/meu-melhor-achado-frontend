@@ -25,11 +25,11 @@ export async function safeApiFetch<T>(fallback: T, request: () => Promise<T>): P
 export const api = {
   categories: () => apiFetch<Category[]>('/categories/'),
   category: (slug: string) => apiFetch<Category>(`/categories/${slug}`),
-  articles: (limit = 10) => apiFetch<Article[]>(`/articles/?limit=${limit}`),
+  articles: (limit = 10) => apiFetch<Article[]>(`/articles/?limit=${limit}`, 300),
   articlesByCategory: (slug: string, limit = 10) =>
-    apiFetch<Article[]>(`/articles/?category=${slug}&limit=${limit}`),
-  recentArticles: (limit = 5) => apiFetch<Article[]>(`/articles/recent?limit=${limit}`),
-  article: (slug: string) => apiFetch<Article>(`/articles/${slug}`),
+    apiFetch<Article[]>(`/articles/?category=${slug}&limit=${limit}`, 300),
+  recentArticles: (limit = 5) => apiFetch<Article[]>(`/articles/recent?limit=${limit}`, 300),
+  article: (slug: string) => apiFetch<Article>(`/articles/${slug}`, 300),
   todayComparisons: () => apiFetch<Comparison[]>('/comparisons/today', 300),
   deals: (category?: string, limit = 20) => {
     const params = new URLSearchParams({ limit: String(limit) })
