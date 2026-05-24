@@ -26,15 +26,12 @@ export default function DealCard({ deal }: { deal: Deal }) {
     typeof deal.originalPrice === 'number' && deal.originalPrice > deal.dealPrice
       ? formatMoney(deal.originalPrice - deal.dealPrice)
       : null
+  const cardClass =
+    'group flex min-h-full flex-col overflow-hidden rounded-lg border bg-white transition-shadow hover:shadow-lg'
+  const cardStyle = { borderColor: '#E8E0D5' }
 
-  return (
-    <a
-      href={deal.affiliateUrl}
-      target="_blank"
-      rel="noopener noreferrer nofollow"
-      className="group flex min-h-full flex-col overflow-hidden rounded-lg border bg-white transition-shadow hover:shadow-lg"
-      style={{ borderColor: '#E8E0D5' }}
-    >
+  const content = (
+    <>
       <div
         className="relative flex h-40 w-full flex-col items-center justify-center gap-2"
         style={{ backgroundColor: '#F5EFE6' }}
@@ -77,10 +74,30 @@ export default function DealCard({ deal }: { deal: Deal }) {
         )}
         <div className="mt-auto flex items-center justify-end gap-3 border-t pt-3" style={{ borderColor: '#E8E0D5' }}>
           <span className="rounded-lg px-3 py-1.5 text-xs font-semibold text-white" style={{ backgroundColor: '#D4A373' }}>
-            Ver oferta →
+            {deal.affiliateUrl ? 'Ver oferta →' : 'Oferta em validação'}
           </span>
         </div>
       </div>
+    </>
+  )
+
+  if (!deal.affiliateUrl) {
+    return (
+      <div className={cardClass} style={cardStyle}>
+        {content}
+      </div>
+    )
+  }
+
+  return (
+    <a
+      href={deal.affiliateUrl}
+      target="_blank"
+      rel="noopener noreferrer nofollow"
+      className={cardClass}
+      style={cardStyle}
+    >
+      {content}
     </a>
   )
 }

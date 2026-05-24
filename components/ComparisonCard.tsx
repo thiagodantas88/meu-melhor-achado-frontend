@@ -32,15 +32,21 @@ export default function ComparisonCard({ comparison }: { comparison: Comparison 
                 </li>
               ))}
             </ul>
-            <a
-              href={product.affiliate_url}
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-              className="mt-auto rounded-lg px-3 py-2 text-center text-xs font-semibold text-white transition-colors hover:opacity-90"
-              style={{ backgroundColor: '#1E3A5F' }}
-            >
-              Ver oferta →
-            </a>
+            {product.affiliate_url ? (
+              <a
+                href={product.affiliate_url}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                className="mt-auto rounded-lg px-3 py-2 text-center text-xs font-semibold text-white transition-colors hover:opacity-90"
+                style={{ backgroundColor: '#1E3A5F' }}
+              >
+                Ver oferta →
+              </a>
+            ) : (
+              <span className="mt-auto rounded-lg bg-[#E8E0D5] px-3 py-2 text-center text-xs font-semibold text-[#6B7280]">
+                Oferta em validação
+              </span>
+            )}
           </div>
         ))}
       </div>

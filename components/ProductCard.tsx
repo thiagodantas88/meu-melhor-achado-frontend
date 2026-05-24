@@ -38,14 +38,20 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
       </div>
 
-      <a
-        href={product.affiliateUrl}
-        target="_blank"
-        rel="noopener noreferrer nofollow"
-        className="btn-primary mt-auto justify-center text-center"
-      >
-        Ver oferta →
-      </a>
+      {product.affiliateUrl ? (
+        <a
+          href={product.affiliateUrl}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+          className="btn-primary mt-auto justify-center text-center"
+        >
+          Ver oferta →
+        </a>
+      ) : (
+        <span className="mt-auto rounded-lg bg-[#E8E0D5] px-4 py-3 text-center text-sm font-semibold text-[#6B7280]">
+          Oferta em validação
+        </span>
+      )}
     </div>
   )
 }

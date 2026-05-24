@@ -13,7 +13,7 @@ export type Product = {
   summary: string
   pros: string[]
   cons: string[]
-  affiliateUrl: string
+  affiliateUrl?: string | null
   imageUrl?: string
   price?: string
   rating?: number
@@ -44,7 +44,7 @@ export type Article = {
 export type ComparisonProduct = {
   name: string
   price: string
-  affiliate_url: string
+  affiliate_url?: string | null
   pros: string[]
 }
 
@@ -64,7 +64,7 @@ export type Deal = {
   originalPrice?: number | null
   dealPrice: number
   discountPct?: number | null
-  affiliateUrl: string
+  affiliateUrl?: string | null
   source: string
   category: string
   imageUrl?: string | null
