@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Jogo de panelas antiaderente</title>
+  <desc id="desc">Ilustração editorial de panelas antiaderentes sem marca em uma bancada.</desc>
+  <rect width="1200" height="675" fill="#F5EFE6"/>
+  <rect x="110" y="410" width="980" height="90" rx="28" fill="#D4A373" opacity=".3"/>
+  <ellipse cx="450" cy="410" rx="170" ry="42" fill="#E8E0D5"/>
+  <path d="M310 292h280l-38 120c-8 26-28 42-56 42h-92c-28 0-48-16-56-42z" fill="#1E3A5F"/>
+  <rect x="296" y="270" width="308" height="32" rx="16" fill="#243E63"/>
+  <path d="M590 319h148" stroke="#1E3A5F" stroke-width="22" stroke-linecap="round"/>
+  <ellipse cx="760" cy="415" rx="135" ry="34" fill="#E8E0D5"/>
+  <path d="M650 330h220l-28 84c-7 23-24 36-49 36h-66c-25 0-42-13-49-36z" fill="#D4A373"/>
+  <rect x="640" y="310" width="240" height="26" rx="13" fill="#B8855A"/>
+  <path d="M660 292c20-36 180-36 200 0" fill="none" stroke="#1E3A5F" stroke-width="16" stroke-linecap="round"/>
+  <circle cx="450" cy="247" r="12" fill="#D4A373"/>
+  <circle cx="760" cy="285" r="10" fill="#1E3A5F"/>
+</svg>

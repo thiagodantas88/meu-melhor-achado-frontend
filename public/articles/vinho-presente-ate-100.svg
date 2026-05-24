@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Vinho para presente até cem reais</title>
+  <desc id="desc">Ilustração editorial de garrafa de vinho e taça para presente, sem rótulo de marca.</desc>
+  <rect width="1200" height="675" fill="#F5EFE6"/>
+  <rect x="120" y="105" width="960" height="470" rx="36" fill="#FAFAFA"/>
+  <rect x="405" y="155" width="120" height="345" rx="42" fill="#1E3A5F"/>
+  <rect x="430" y="100" width="70" height="105" rx="22" fill="#1E3A5F"/>
+  <rect x="422" y="308" width="86" height="120" rx="18" fill="#D4A373"/>
+  <path d="M710 195c70 0 110 48 98 118-9 56-42 91-83 101v96" fill="none" stroke="#1E3A5F" stroke-width="26" stroke-linecap="round"/>
+  <path d="M660 510h130" stroke="#1E3A5F" stroke-width="22" stroke-linecap="round"/>
+  <path d="M612 195h196c6 64-28 118-98 118s-104-54-98-118z" fill="#D4A373" opacity=".9"/>
+  <path d="M320 445l-60 60M880 150l55-55M910 500l72 34" stroke="#E8E0D5" stroke-width="20" stroke-linecap="round"/>
+</svg>

@@ -12,6 +12,11 @@ type Props = { params: { slug: string } }
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://meumelhorachado.com.br'
 
+function absoluteImageUrl(imageUrl?: string | null) {
+  if (!imageUrl) return undefined
+  return imageUrl.startsWith('http') ? imageUrl : `${SITE_URL}${imageUrl}`
+}
+
 async function getArticle(slug: string): Promise<Article | null> {
   try {
     return await api.article(slug)
@@ -25,7 +30,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!article) return {}
 
   const url = `${SITE_URL}/artigo/${article.slug}`
-  const images = article.imageUrl ? [{ url: article.imageUrl, alt: article.title }] : undefined
+  const imageUrl = absoluteImageUrl(article.imageUrl)
+  const images = imageUrl ? [{ url: imageUrl, alt: article.title }] : undefined
 
   return {
     title: article.title,
@@ -42,10 +48,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images,
     },
     twitter: {
-      card: article.imageUrl ? 'summary_large_image' : 'summary',
+      card: imageUrl ? 'summary_large_image' : 'summary',
       title: article.title,
       description: article.summary,
-      images: article.imageUrl ? [article.imageUrl] : undefined,
+      images: imageUrl ? [imageUrl] : undefined,
     },
   }
 }
@@ -69,12 +75,13 @@ export default async function ArtigoPage({ params }: Props) {
     .catch(() => [])
 
   const articleUrl = `${SITE_URL}/artigo/${article.slug}`
+  const imageUrl = absoluteImageUrl(article.imageUrl)
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: article.title,
     description: article.summary,
-    image: article.imageUrl ? [article.imageUrl] : undefined,
+    image: imageUrl ? [imageUrl] : undefined,
     datePublished: article.publishedAt,
     dateModified: article.publishedAt,
     author: {
