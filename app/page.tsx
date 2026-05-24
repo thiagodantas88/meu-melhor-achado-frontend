@@ -5,6 +5,8 @@ import ComparisonCard from '@/components/ComparisonCard'
 import EmailCapture from '@/components/EmailCapture'
 import { api, safeApiFetch } from '@/lib/api'
 
+export const revalidate = 60
+
 export default async function HomePage() {
   const [categories, articles, comparisons] = await Promise.all([
     safeApiFetch([], () => api.categories()),
