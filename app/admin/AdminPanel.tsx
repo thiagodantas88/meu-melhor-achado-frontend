@@ -45,12 +45,26 @@ type RunResponse = {
   dealsPublished?: number
 }
 
+const ADMIN_TIME_ZONE = 'America/Fortaleza'
+
+function parseBackendDate(value: string) {
+  const hasTimeZone = /(?:Z|[+-]\d{2}:?\d{2})$/.test(value)
+  return new Date(hasTimeZone ? value : `${value}Z`)
+}
+
 function formatDateTime(value?: string | null) {
   if (!value) return '-'
   return new Intl.DateTimeFormat('pt-BR', {
     dateStyle: 'short',
     timeStyle: 'short',
-  }).format(new Date(value))
+    timeZone: ADMIN_TIME_ZONE,
+  }).format(parseBackendDate(value))
+}
+
+function formatRunId(value: string) {
+  const match = value.match(/^(\d{4}-\d{2}-\d{2})_(\d{2}:\d{2})$/)
+  if (!match) return value
+  return formatDateTime(`${match[1]}T${match[2]}:00`)
 }
 
 function formatPrice(value: number) {
@@ -61,12 +75,17 @@ function formatPrice(value: number) {
 }
 
 function todayISO() {
-  return new Date().toISOString().slice(0, 10)
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: ADMIN_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
 }
 
 function groupHistoryByRun(items: HistoryItem[]) {
   return items.reduce<Record<string, HistoryItem[]>>((groups, item) => {
-    const key = item.scraperRun || item.recordedAt?.slice(0, 10) || 'sem-rodada'
+    const key = item.scraperRun || (item.recordedAt ? formatDateTime(item.recordedAt) : 'sem-rodada')
     groups[key] = groups[key] || []
     groups[key].push(item)
     return groups
@@ -347,7 +366,7 @@ export default function AdminPanel() {
                 <article key={log.runId} className="rounded-lg border p-3" style={{ borderColor: '#E8E0D5' }}>
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="text-sm font-bold text-[#1E3A5F]">{log.runId}</h3>
+                      <h3 className="text-sm font-bold text-[#1E3A5F]">{formatRunId(log.runId)}</h3>
                       <p className="mt-1 text-xs text-[#6B7280]">{formatDateTime(log.startedAt)}</p>
                     </div>
                     <span className="rounded-full bg-[#E6EDF5] px-2.5 py-1 text-xs font-semibold text-[#1E3A5F]">
@@ -417,7 +436,7 @@ export default function AdminPanel() {
               {Object.entries(groupedHistory).map(([runId, items]) => (
                 <div key={runId}>
                   <div className="mb-2 flex items-center justify-between gap-3">
-                    <h3 className="text-sm font-bold text-[#1E3A5F]">Rodada {runId}</h3>
+                    <h3 className="text-sm font-bold text-[#1E3A5F]">Rodada {formatRunId(runId)}</h3>
                     <span className="text-xs text-[#6B7280]">{items.length} ofertas</span>
                   </div>
                   <div className="overflow-x-auto rounded-lg border" style={{ borderColor: '#E8E0D5' }}>
