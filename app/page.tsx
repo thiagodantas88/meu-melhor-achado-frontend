@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import ArticleCard from '@/components/ArticleCard'
 import ComparisonCard from '@/components/ComparisonCard'
@@ -77,7 +76,7 @@ export default async function HomePage() {
                     </div>
                     {featured.imageUrl && (
                       <div className="relative h-56 w-full overflow-hidden rounded-lg shadow-lg sm:h-64 md:h-80">
-                        <Image src={featured.imageUrl} alt={featured.title} fill className="object-cover" priority={index === 0} />
+                        <img src={featured.imageUrl} alt={featured.title} className="h-full w-full object-cover" />
                       </div>
                     )}
                   </article>

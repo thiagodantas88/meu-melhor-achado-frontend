@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import ProductCard from '@/components/ProductCard'
@@ -205,7 +204,7 @@ export default async function ArtigoPage({ params }: Props) {
 
       {article.imageUrl && (
         <div className="relative mb-10 h-64 w-full overflow-hidden rounded-lg md:h-80">
-          <Image src={article.imageUrl} alt={article.title} fill className="object-cover" priority />
+          <img src={article.imageUrl} alt={article.title} className="h-full w-full object-cover" />
         </div>
       )}
 

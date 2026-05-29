@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { Article } from '@/types'
 
 function formatDate(dateStr: string) {
@@ -16,11 +15,10 @@ export default function ArticleCard({ article }: { article: Article }) {
     <Link href={`/artigo/${article.slug}`} className="card group block">
       <div className="relative h-44 w-full overflow-hidden sm:h-48" style={{ backgroundColor: '#F5EFE6' }}>
         {article.imageUrl ? (
-          <Image
+          <img
             src={article.imageUrl}
             alt={article.title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-5xl">
