@@ -3,10 +3,11 @@ import Image from 'next/image'
 import { Article } from '@/types'
 
 function formatDate(dateStr: string) {
-  const [year, month, day] = dateStr.split('-').map(Number)
-
-  return new Date(year, month - 1, day).toLocaleDateString('pt-BR', {
-    day: '2-digit', month: 'short', year: 'numeric',
+  return new Date(dateStr).toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'America/Fortaleza',
   })
 }
 

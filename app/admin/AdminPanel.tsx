@@ -34,6 +34,29 @@ type HistoryItem = {
   scraperRun?: string | null
 }
 
+type ArticleHistoryItem = {
+  id: number
+  slug: string
+  title: string
+  category?: string | null
+  categoryName?: string | null
+  publishedAt: string | null
+  readingTime: number
+  isFeatured: boolean
+  isAuto: boolean
+  isOffer: boolean
+}
+
+type ComparisonHistoryItem = {
+  id: number
+  title: string
+  category: string
+  date: string
+  publishedAt: string | null
+  summary?: string | null
+  verdict?: string | null
+}
+
 type RunResponse = {
   status: string
   mode?: string
@@ -59,12 +82,6 @@ function formatDateTime(value?: string | null) {
     timeStyle: 'short',
     timeZone: ADMIN_TIME_ZONE,
   }).format(parseBackendDate(value))
-}
-
-function formatRunId(value: string) {
-  const match = value.match(/^(\d{4}-\d{2}-\d{2})_(\d{2}:\d{2})$/)
-  if (!match) return value
-  return formatDateTime(`${match[1]}T${match[2]}:00`)
 }
 
 function formatPrice(value: number) {
@@ -98,6 +115,8 @@ export default function AdminPanel() {
   const [categories, setCategories] = useState<Category[]>([])
   const [logs, setLogs] = useState<ScraperLog[]>([])
   const [history, setHistory] = useState<HistoryItem[]>([])
+  const [articleHistory, setArticleHistory] = useState<ArticleHistoryItem[]>([])
+  const [comparisonHistory, setComparisonHistory] = useState<ComparisonHistoryItem[]>([])
   const [historyDate, setHistoryDate] = useState(todayISO())
   const [historyCategory, setHistoryCategory] = useState('')
   const [historySource, setHistorySource] = useState('')
@@ -163,13 +182,17 @@ export default function AdminPanel() {
       if (historyCategory) params.set('category', historyCategory)
       if (historySource) params.set('source', historySource)
 
-      const [nextLogs, nextHistory] = await Promise.all([
+      const [nextLogs, nextHistory, nextArticles, nextComparisons] = await Promise.all([
         adminFetch<ScraperLog[]>('/admin/scraper-logs?limit=20'),
         adminFetch<HistoryItem[]>(`/admin/offers-history?${params.toString()}`),
+        adminFetch<ArticleHistoryItem[]>('/admin/articles-history?limit=30'),
+        adminFetch<ComparisonHistoryItem[]>('/admin/comparisons-history?limit=30'),
       ])
 
       setLogs(nextLogs)
       setHistory(nextHistory)
+      setArticleHistory(nextArticles)
+      setComparisonHistory(nextComparisons)
       setMessage('Dados atualizados.')
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : 'Erro ao carregar dados.')
@@ -355,6 +378,72 @@ export default function AdminPanel() {
         </form>
       </section>
 
+      <section className="mb-8 grid gap-6 xl:grid-cols-2">
+        <div className="rounded-lg border bg-white p-4 sm:p-5" style={{ borderColor: '#E8E0D5' }}>
+          <h2 className="font-serif text-2xl font-bold text-[#1E3A5F]">Histórico de artigos</h2>
+          <p className="mt-1 text-sm text-[#6B7280]">Últimos artigos publicados, com data e flags editoriais.</p>
+          <div className="mt-4 space-y-3">
+            {articleHistory.length === 0 ? (
+              <p className="text-sm text-[#6B7280]">Nenhum artigo carregado.</p>
+            ) : (
+              articleHistory.map((article) => (
+                <article key={article.id} className="rounded-lg border p-3" style={{ borderColor: '#E8E0D5' }}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <a
+                        href={`/artigo/${article.slug}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-sm font-bold text-[#1E3A5F] hover:underline"
+                      >
+                        {article.title}
+                      </a>
+                      <p className="mt-1 text-xs text-[#6B7280]">
+                        {article.categoryName || article.category} · {formatDateTime(article.publishedAt)} · {article.readingTime} min
+                      </p>
+                    </div>
+                    <div className="flex shrink-0 flex-wrap justify-end gap-1">
+                      {article.isFeatured ? <span className="badge-blue text-[10px]">Destaque</span> : null}
+                      {article.isAuto ? <span className="badge-gold text-[10px]">Auto</span> : null}
+                    </div>
+                  </div>
+                </article>
+              ))
+            )}
+          </div>
+        </div>
+
+        <div className="rounded-lg border bg-white p-4 sm:p-5" style={{ borderColor: '#E8E0D5' }}>
+          <h2 className="font-serif text-2xl font-bold text-[#1E3A5F]">Histórico de comparativos</h2>
+          <p className="mt-1 text-sm text-[#6B7280]">Registro das comparações geradas nas rodadas do robô.</p>
+          <div className="mt-4 space-y-3">
+            {comparisonHistory.length === 0 ? (
+              <p className="text-sm text-[#6B7280]">Nenhum comparativo carregado.</p>
+            ) : (
+              comparisonHistory.map((comparison) => (
+                <article key={comparison.id} className="rounded-lg border p-3" style={{ borderColor: '#E8E0D5' }}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className="text-sm font-bold text-[#1E3A5F]">{comparison.title}</h3>
+                      <p className="mt-1 text-xs text-[#6B7280]">
+                        {comparison.category} · {formatDateTime(comparison.publishedAt)}
+                      </p>
+                    </div>
+                    <span className="badge-gold shrink-0 text-[10px]">{comparison.date}</span>
+                  </div>
+                  {comparison.summary ? <p className="mt-3 text-xs leading-relaxed text-[#6B7280]">{comparison.summary}</p> : null}
+                  {comparison.verdict ? (
+                    <p className="mt-2 rounded-lg bg-[#F5EFE6] p-2 text-xs leading-relaxed text-[#6B7280]">
+                      {comparison.verdict}
+                    </p>
+                  ) : null}
+                </article>
+              ))
+            )}
+          </div>
+        </div>
+      </section>
+
       <section className="mb-8 grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
         <div className="rounded-lg border bg-white p-4 sm:p-5" style={{ borderColor: '#E8E0D5' }}>
           <h2 className="font-serif text-2xl font-bold text-[#1E3A5F]">Últimas rodadas</h2>
@@ -366,8 +455,8 @@ export default function AdminPanel() {
                 <article key={log.runId} className="rounded-lg border p-3" style={{ borderColor: '#E8E0D5' }}>
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="text-sm font-bold text-[#1E3A5F]">{formatRunId(log.runId)}</h3>
-                      <p className="mt-1 text-xs text-[#6B7280]">{formatDateTime(log.startedAt)}</p>
+                      <h3 className="text-sm font-bold text-[#1E3A5F]">Rodada {formatDateTime(log.startedAt)}</h3>
+                      <p className="mt-1 text-xs text-[#6B7280]">{log.runId}</p>
                     </div>
                     <span className="rounded-full bg-[#E6EDF5] px-2.5 py-1 text-xs font-semibold text-[#1E3A5F]">
                       {log.status}
@@ -436,7 +525,7 @@ export default function AdminPanel() {
               {Object.entries(groupedHistory).map(([runId, items]) => (
                 <div key={runId}>
                   <div className="mb-2 flex items-center justify-between gap-3">
-                    <h3 className="text-sm font-bold text-[#1E3A5F]">Rodada {formatRunId(runId)}</h3>
+                    <h3 className="text-sm font-bold text-[#1E3A5F]">Rodada {formatDateTime(items[0]?.recordedAt)}</h3>
                     <span className="text-xs text-[#6B7280]">{items.length} ofertas</span>
                   </div>
                   <div className="overflow-x-auto rounded-lg border" style={{ borderColor: '#E8E0D5' }}>

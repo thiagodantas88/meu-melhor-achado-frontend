@@ -56,14 +56,85 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-function formatDate(dateStr: string) {
-  const [year, month, day] = dateStr.split('-').map(Number)
+function parsePublishedAt(dateStr: string) {
+  const hasTimeZone = /(?:Z|[+-]\d{2}:?\d{2})$/.test(dateStr)
+  return new Date(hasTimeZone ? dateStr : `${dateStr}Z`)
+}
 
-  return new Date(year, month - 1, day).toLocaleDateString('pt-BR', {
+function formatDate(dateStr: string) {
+  return parsePublishedAt(dateStr).toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
+    timeZone: 'America/Fortaleza',
   })
+}
+
+function formatDateTime(dateStr: string) {
+  return new Intl.DateTimeFormat('pt-BR', {
+    dateStyle: 'long',
+    timeStyle: 'short',
+    timeZone: 'America/Fortaleza',
+  }).format(parsePublishedAt(dateStr))
+}
+
+function buildEditorialGuide(article: Article) {
+  const category = article.category.slug
+  const productNames = (article.products || []).slice(0, 3).map((product) => product.name)
+  const productsText = productNames.length > 0 ? productNames.join(', ') : 'as opções selecionadas'
+
+  const guides: Record<string, { title: string; paragraphs: string[]; items: string[] }> = {
+    moda: {
+      title: 'Como escolher sem errar no uso real',
+      paragraphs: [
+        'Em moda, a melhor compra raramente é só a mais bonita na foto. Vale pensar em conforto, material, possibilidade de combinar com peças que você já tem e se o produto funciona para mais de uma ocasião.',
+        `Neste guia, use ${productsText} como ponto de partida. Compare forma, acabamento, avaliações e política de troca antes de decidir, principalmente quando houver variação de tamanho entre marcas.`,
+      ],
+      items: ['Confira a tabela de medidas e comentários sobre forma', 'Prefira cores e materiais que combinem com sua rotina', 'Leia avaliações com fotos quando estiverem disponíveis', 'Considere troca fácil se for calçado ou peça com modelagem ajustada'],
+    },
+    casa: {
+      title: 'Como avaliar custo-benefício de verdade',
+      paragraphs: [
+        'Produtos para casa precisam resolver uma tarefa repetida sem virar dor de cabeça. Capacidade, potência, consumo, facilidade de limpeza e assistência contam tanto quanto o preço da oferta.',
+        `Ao comparar ${productsText}, pense na sua rotina: quantidade de pessoas, espaço disponível e frequência de uso. Um modelo barato pode sair caro se for pequeno demais ou difícil de limpar.`,
+      ],
+      items: ['Verifique dimensões antes da compra', 'Compare potência, capacidade e consumo', 'Observe disponibilidade de peças e garantia', 'Leia reclamações sobre ruído, limpeza e durabilidade'],
+    },
+    bebidas: {
+      title: 'Como comparar bebidas além do preço',
+      paragraphs: [
+        'Em bebidas, preço baixo chama atenção, mas volume, origem, perfil de sabor e ocasião de consumo mudam bastante a percepção de valor.',
+        `Para escolher entre ${productsText}, veja se a compra é para presentear, servir em encontro, experimentar algo novo ou repor uma bebida que você já conhece.`,
+      ],
+      items: ['Compare preço por litro ou unidade', 'Confira volume da garrafa ou quantidade de cápsulas', 'Observe avaliações sobre sabor e autenticidade', 'Verifique prazo, embalagem e condições de entrega'],
+    },
+    tecnologia: {
+      title: 'Como evitar compra incompatível',
+      paragraphs: [
+        'Em tecnologia, o menor preço só vale se o produto for compatível com o que você já usa. Potência, conexão, geração do padrão e garantia fazem diferença no dia a dia.',
+        `Ao avaliar ${productsText}, confirme especificações e leia comentários recentes. Muitas devoluções acontecem por cabo errado, carregador fraco ou acessório incompatível.`,
+      ],
+      items: ['Confira compatibilidade com seu aparelho', 'Priorize marcas e certificados quando houver energia envolvida', 'Veja avaliações recentes, não só nota média', 'Compare garantia e política de devolução'],
+    },
+    carro: {
+      title: 'Como escolher acessório automotivo com segurança',
+      paragraphs: [
+        'No carro, acessório bom precisa ser compatível, firme e seguro. Um suporte barato que solta ou um carregador fraco atrapalha mais do que ajuda.',
+        `Ao comparar ${productsText}, verifique fixação, material, tipo de encaixe e se o produto atende ao modelo do seu veículo ou celular.`,
+      ],
+      items: ['Confira tipo de fixação e compatibilidade', 'Evite acessórios que obstruem visão ou comandos', 'Leia avaliações sobre estabilidade em movimento', 'Prefira produtos com construção mais firme'],
+    },
+    'home-office': {
+      title: 'Como pensar em conforto de longo prazo',
+      paragraphs: [
+        'No home office, conforto e ergonomia aparecem depois de algumas horas de uso. Por isso, ajuste, altura, apoio e material são mais importantes do que aparência isolada.',
+        `Ao olhar ${productsText}, pense em quantas horas por dia você usa o item e se ele melhora postura, organização ou concentração.`,
+      ],
+      items: ['Observe medidas e ajustes disponíveis', 'Priorize conforto para uso prolongado', 'Confira avaliações de quem usa todos os dias', 'Considere espaço disponível na mesa ou ambiente'],
+    },
+  }
+
+  return guides[category] || guides.tecnologia
 }
 
 export default async function ArtigoPage({ params }: Props) {
@@ -118,7 +189,7 @@ export default async function ArtigoPage({ params }: Props) {
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <span className="badge-gold">{article.category.icon} {article.category.name}</span>
         <span className="text-xs" style={{ color: '#6B7280' }}>
-          {formatDate(article.publishedAt)} · {article.readingTime} min de leitura
+          Publicado em {formatDateTime(article.publishedAt)} · {article.readingTime} min de leitura
         </span>
       </div>
 
@@ -190,6 +261,37 @@ export default async function ArtigoPage({ params }: Props) {
           </p>
         </div>
       )}
+
+      <section className="mb-12 rounded-lg border bg-white p-6" style={{ borderColor: '#E8E0D5' }}>
+        {(() => {
+          const guide = buildEditorialGuide(article)
+          return (
+            <>
+              <h2 className="mb-4 font-serif text-2xl font-bold" style={{ color: '#1E3A5F' }}>
+                {guide.title}
+              </h2>
+              <div className="space-y-4 text-base leading-relaxed" style={{ color: '#2D2D2D' }}>
+                {guide.paragraphs.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
+              <div className="mt-6 rounded-lg p-4" style={{ backgroundColor: '#F5EFE6' }}>
+                <h3 className="mb-3 text-sm font-bold uppercase tracking-wide" style={{ color: '#1E3A5F' }}>
+                  Checklist antes de comprar
+                </h3>
+                <ul className="space-y-2">
+                  {guide.items.map((item) => (
+                    <li key={item} className="flex gap-3 text-sm" style={{ color: '#2D2D2D' }}>
+                      <span style={{ color: '#D4A373' }} className="mt-0.5 shrink-0">✦</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          )
+        })()}
+      </section>
 
       {article.products && article.products.length > 0 && (
         <section>

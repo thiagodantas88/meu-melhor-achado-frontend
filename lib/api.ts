@@ -26,6 +26,7 @@ export const api = {
   categories: () => apiFetch<Category[]>('/categories/'),
   category: (slug: string) => apiFetch<Category>(`/categories/${slug}`),
   articles: (limit = 10) => apiFetch<Article[]>(`/articles/?limit=${limit}`, 300),
+  featuredArticles: () => apiFetch<Article[]>('/articles/featured', 60),
   articlesByCategory: (slug: string, limit = 10) =>
     apiFetch<Article[]>(`/articles/?category=${slug}&limit=${limit}`, 300),
   recentArticles: (limit = 5) => apiFetch<Article[]>(`/articles/recent?limit=${limit}`, 300),

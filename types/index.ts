@@ -46,16 +46,20 @@ export type ComparisonProduct = {
   price: string
   affiliate_url?: string | null
   pros: string[]
+  best_for?: string
 }
 
 export type Comparison = {
   id: number
   title: string
   summary: string
+  verdict?: string | null
+  criteria?: string | null
   category: string
   productA: ComparisonProduct
   productB: ComparisonProduct
   date?: string
+  publishedAt?: string | null
 }
 
 export type Deal = {
