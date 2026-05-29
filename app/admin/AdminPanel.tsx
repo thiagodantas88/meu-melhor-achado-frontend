@@ -7,7 +7,7 @@ const API_URL =
   process.env.NEXT_PUBLIC_API_URL ||
   'https://meu-melhor-achado-backend-production.up.railway.app'
 
-type RunMode = 'general' | 'category' | 'product' | 'reference'
+type RunMode = 'general' | 'category' | 'product' | 'reference' | 'articles'
 
 type ScraperLog = {
   runId: string
@@ -66,6 +66,7 @@ type RunResponse = {
   amazonFound?: number
   magaluFound?: number
   dealsPublished?: number
+  articlesGenerated?: number
 }
 
 const ADMIN_TIME_ZONE = 'America/Fortaleza'
@@ -213,7 +214,7 @@ export default function AdminPanel() {
     setMessage('')
 
     const payload =
-      mode === 'general'
+      mode === 'general' || mode === 'articles'
         ? { mode }
         : mode === 'category'
           ? { mode, category: runCategory }
@@ -232,6 +233,8 @@ export default function AdminPanel() {
       setMessage(
         result.mode === 'general'
           ? 'Robô geral executado com sucesso.'
+          : result.mode === 'articles'
+            ? `Artigos atualizados com sucesso. Gerados: ${result.articlesGenerated ?? 0}.`
           : `Rodada executada em ${selectedCategoryName}. Publicadas: ${result.dealsPublished ?? 0}.`,
       )
       await refreshData()
@@ -325,13 +328,14 @@ export default function AdminPanel() {
               style={{ borderColor: '#E8E0D5' }}
             >
               <option value="general">Geral</option>
+              <option value="articles">Atualizar artigos da capa</option>
               <option value="category">Categoria completa</option>
               <option value="product">Produto/termo específico</option>
               <option value="reference">Referência ou modelo</option>
             </select>
           </div>
 
-          {mode !== 'general' ? (
+          {mode !== 'general' && mode !== 'articles' ? (
             <div>
               <label className="block text-sm font-semibold text-[#1E3A5F]" htmlFor="run-category">
                 Categoria
