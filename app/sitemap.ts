@@ -5,6 +5,17 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://meumelhorachado.co
 
 const staticRoutes = ['', '/sobre', '/politica-de-afiliados', '/ofertas']
 
+function parseBackendDate(value?: string) {
+  if (!value) return new Date()
+  const hasTime = value.includes('T')
+  const hasTimeZone = /(?:Z|[+-]\d{2}:?\d{2})$/.test(value)
+  const normalized = hasTime
+    ? hasTimeZone ? value : `${value}Z`
+    : `${value}T00:00:00-03:00`
+  const date = new Date(normalized)
+  return Number.isNaN(date.getTime()) ? new Date() : date
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
   const urls: MetadataRoute.Sitemap = staticRoutes.map((path) => ({
@@ -26,7 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       })),
       ...articles.map((article) => ({
         url: `${SITE_URL}/artigo/${article.slug}`,
-        lastModified: article.publishedAt ? new Date(`${article.publishedAt}T00:00:00-03:00`) : now,
+        lastModified: parseBackendDate(article.publishedAt),
         changeFrequency: 'weekly' as const,
         priority: 0.9,
       })),
