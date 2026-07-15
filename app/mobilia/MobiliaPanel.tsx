@@ -80,7 +80,9 @@ export default function MobiliaPanel() {
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
-  const currentOffers = currentSearch?.offers || []
+  const currentOffers = (currentSearch?.offers || []).filter(
+    (offer) => typeof offer.price === 'number' && Boolean(offer.url),
+  )
   const partnerCount = useMemo(() => currentOffers.filter((offer) => offer.isPartner).length, [currentOffers])
 
   useEffect(() => {
@@ -171,7 +173,15 @@ export default function MobiliaPanel() {
         body: JSON.stringify({ ...form, cep: '59091-130' }),
       })
       setCurrentSearch(data)
-      setMessage(`${data.resultsCount} oferta(s) encontradas para "${data.query}".`)
+      if (data.resultsCount > 0) {
+        setMessage(`${data.resultsCount} oferta(s) com preço e link direto encontradas para "${data.query}".`)
+      } else {
+        setMessage('')
+        setError(
+          `Nenhuma oferta com preço e página direta de produto foi encontrada para "${data.query}". ` +
+          'Tente informar marca, modelo ou uma descrição mais específica.',
+        )
+      }
       await loadHistory()
     } catch (searchError) {
       setError(searchError instanceof Error ? searchError.message : 'Erro ao buscar ofertas.')
@@ -306,8 +316,19 @@ export default function MobiliaPanel() {
           </div>
         ) : (
           <div className="rounded-lg border bg-white px-4 py-12 text-center" style={{ borderColor: '#E8E0D5' }}>
-            <p className="font-semibold text-[#1E3A5F]">Nenhuma busca executada nesta sessão.</p>
-            <p className="mt-2 text-sm text-[#6B7280]">Preencha qualquer campo acima para iniciar.</p>
+            {currentSearch ? (
+              <>
+                <p className="font-semibold text-[#1E3A5F]">Nenhuma oferta válida encontrada.</p>
+                <p className="mt-2 text-sm text-[#6B7280]">
+                  A busca só exibe cards com preço e link direto para produto. Links de pesquisa e ofertas sem valor foram descartados.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="font-semibold text-[#1E3A5F]">Nenhuma busca executada nesta sessão.</p>
+                <p className="mt-2 text-sm text-[#6B7280]">Preencha qualquer campo acima para iniciar.</p>
+              </>
+            )}
           </div>
         )}
       </section>
