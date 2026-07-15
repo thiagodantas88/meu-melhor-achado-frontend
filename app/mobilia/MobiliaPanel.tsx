@@ -50,6 +50,14 @@ const emptyForm: SearchForm = {
   description: '',
 }
 
+const quickSearchTargets = [
+  { label: 'Google Shopping', kind: 'google-shopping' },
+  { label: 'Magalu', kind: 'magalu' },
+  { label: 'Havan', kind: 'havan' },
+  { label: 'Carrefour', kind: 'carrefour' },
+  { label: 'Amazon', kind: 'amazon' },
+]
+
 function formatMoney(value?: number | null) {
   if (typeof value !== 'number') return 'Preço não informado'
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
@@ -74,6 +82,7 @@ export default function MobiliaPanel() {
   const [password, setPassword] = useState('')
   const [auth, setAuth] = useState('')
   const [form, setForm] = useState<SearchForm>(emptyForm)
+  const [productUrl, setProductUrl] = useState('')
   const [currentSearch, setCurrentSearch] = useState<MobiliaSearch | null>(null)
   const [history, setHistory] = useState<MobiliaSearch[]>([])
   const [loading, setLoading] = useState(false)
@@ -84,6 +93,10 @@ export default function MobiliaPanel() {
     (offer) => typeof offer.price === 'number' && Boolean(offer.url),
   )
   const partnerCount = useMemo(() => currentOffers.filter((offer) => offer.isPartner).length, [currentOffers])
+  const queryText = useMemo(
+    () => Object.values(form).map((value) => value.trim()).filter(Boolean).join(' '),
+    [form],
+  )
 
   useEffect(() => {
     const savedAuth = window.sessionStorage.getItem('mobilia_auth')
@@ -191,6 +204,53 @@ export default function MobiliaPanel() {
     }
   }
 
+  function openQuickSearch(kind: string) {
+    if (!queryText) {
+      setError('Preencha pelo menos um campo para abrir uma busca externa.')
+      return
+    }
+
+    const encoded = encodeURIComponent(queryText)
+    const plusEncoded = queryText.trim().split(/\s+/).map(encodeURIComponent).join('+')
+    const urls: Record<string, string> = {
+      'google-shopping': `https://www.google.com/search?hl=pt-BR&gl=br&tbm=shop&q=${encoded}`,
+      magalu: `https://www.magazinevoce.com.br/magazinemeumelhorachado/busca/${plusEncoded}/`,
+      havan: `https://www.havan.com.br/catalogsearch/result/?q=${encoded}`,
+      carrefour: `https://www.carrefour.com.br/busca/${encoded}`,
+      amazon: `https://www.amazon.com.br/s?k=${plusEncoded}&tag=meumelhoracha-20`,
+    }
+
+    window.open(urls[kind], '_blank', 'noopener,noreferrer')
+  }
+
+  async function importLink(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (!productUrl.trim()) {
+      setError('Cole um link completo de produto para importar.')
+      return
+    }
+
+    setLoading(true)
+    setError('')
+    setMessage('Lendo produto e capturando preço...')
+
+    try {
+      const data = await mobiliaFetch<MobiliaSearch>('/mobilia/import-link', {
+        method: 'POST',
+        body: JSON.stringify({ url: productUrl.trim(), cep: '59091-130' }),
+      })
+      setCurrentSearch(data)
+      setProductUrl('')
+      setMessage('Oferta importada com preço, imagem e link direto.')
+      await loadHistory()
+    } catch (importError) {
+      setError(importError instanceof Error ? importError.message : 'Erro ao importar link.')
+      setMessage('')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   async function download(format: 'csv' | 'xlsx') {
     setError('')
     try {
@@ -292,6 +352,46 @@ export default function MobiliaPanel() {
             </div>
           </div>
         </form>
+
+        <div className="mt-5 border-t pt-5" style={{ borderColor: '#E8E0D5' }}>
+          <p className="text-sm font-semibold text-[#1E3A5F]">Busca assistida</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {quickSearchTargets.map((target) => (
+              <button
+                key={target.kind}
+                type="button"
+                onClick={() => openQuickSearch(target.kind)}
+                className="btn-outline min-h-10 px-3 py-2 text-xs"
+              >
+                Abrir {target.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <form onSubmit={importLink} className="mt-5 border-t pt-5" style={{ borderColor: '#E8E0D5' }}>
+          <label className="block text-sm font-semibold text-[#1E3A5F]" htmlFor="product-url">
+            Importar oferta por link direto do produto
+          </label>
+          <div className="mt-2 flex flex-col gap-3 lg:flex-row">
+            <input
+              id="product-url"
+              type="url"
+              value={productUrl}
+              onChange={(event) => setProductUrl(event.target.value)}
+              placeholder="Cole aqui o link do produto encontrado na loja"
+              className="min-h-11 flex-1 rounded-lg border px-3 text-sm outline-none focus:border-[#1E3A5F]"
+              style={{ borderColor: '#E8E0D5' }}
+            />
+            <button type="submit" disabled={loading} className="btn-secondary w-full disabled:opacity-60 lg:w-auto">
+              {loading ? 'Importando...' : 'Importar oferta'}
+            </button>
+          </div>
+          <p className="mt-2 text-xs leading-relaxed text-[#6B7280]">
+            Funciona melhor com páginas de produto, não com páginas de busca. A oferta importada entra no histórico e nos arquivos CSV/XLSX.
+          </p>
+        </form>
+
         {message ? <p className="mt-4 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">{message}</p> : null}
         {error ? <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
       </section>
